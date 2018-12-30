@@ -13,15 +13,15 @@ const columns = [
 	},
 	{
 		Header: 'Seller Name',
-		accessor: 'Name'
+		accessor: 'name'
 	},
 	{
 		Header: 'Name Verified',
-		accessor: 'IsNameVerified'
+		accessor: 'isNameVerified'
 	},
 	{
 		Header: 'Cell Number',
-		accessor: 'CellNumber'
+		accessor: 'cellNumber'
 	},
 	{
 		Header: 'Click2Call using Callrail',
@@ -29,15 +29,11 @@ const columns = [
 	},
 	{
 		Header: 'Lead Status',
-		accessor: 'LeadStatus'
+		accessor: 'leadStatus'
 	},
 	{
 		Header: 'Communication Status',
-		accessor: 'Communicationstatus'
-	},
-	{
-		Header: 'Make Offer',
-		accessor: 'id'
+		accessor: 'communicationstatus'
 	},
 	{
 		Header: 'Property Link',
@@ -57,9 +53,11 @@ class SellersTable extends React.Component {
 		if (this.state.toEdit) {
 			return <Redirect to={'/Sellers/Edit/' + this.state.sellerId} />;
 		}
+
+		const { sellers } = this.props;
 		return (
 			<ReactTable
-				data={this.props.data}
+				data={sellers}
 				columns={columns}
 				defaultPageSize={20}
 				className="-striped -highlight"
@@ -68,7 +66,6 @@ class SellersTable extends React.Component {
 					return {
 						onClick: (e, handleOriginal) => {
 							const sellerData = rowInfo.original;
-
 							if (handleOriginal) {
 								handleOriginal();
 							}

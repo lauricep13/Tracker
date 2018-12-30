@@ -1,26 +1,33 @@
-import React, { Component } from 'react';
-
-import { makeData } from 'views/Sellers/Utils.js';
+import React from 'react';
+import { connect } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import * as sellerActions from 'actions/sellerActions.js';
 
 // Core components
 import SellersTable from 'components/Sellers/SellersTable/SellersTable.js';
 
-class SellersList extends Component {
-	constructor() {
-		super();
-		this.state = {
-			data: makeData()
-		};
-	}
+const SellersList = props => {
+	return (
+		<div>
+			<h2>Sellers List</h2>
+			<SellersTable sellers={props.sellers} />
+		</div>
+	);
+};
 
-	render() {
-		return (
-			<div>
-				<h2>Sellers List</h2>
-				<SellersTable data={this.state.data} />
-			</div>
-		);
-	}
+function mapStateToProps(state, ownProps) {
+	return {
+		sellers: state.sellers
+	};
 }
 
-export default SellersList;
+function mapDispatchToProps(dispatch) {
+	return {
+		actions: bindActionCreators(sellerActions, dispatch)
+	};
+}
+
+export default connect(
+	mapStateToProps,
+	mapDispatchToProps
+)(SellersList);
