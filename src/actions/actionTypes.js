@@ -1,0 +1,1 @@
+export const CREATE_SELLER = 'CREATE_SELLER';
