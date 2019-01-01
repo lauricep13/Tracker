@@ -10,9 +10,6 @@ const styles = theme => ({
 	container: {
 		display: 'flex',
 		flexWrap: 'wrap'
-	},
-	formControl: {
-		margin: theme.spacing.unit
 	}
 });
 
@@ -52,36 +49,16 @@ TextMaskCustom.propTypes = {
 };
 
 class FormattedInputs extends React.Component {
-	constructor(props) {
-		super(props);
-	}
-
 	render() {
-		const { classes, onChange, value, label, name } = this.props;
+		const { classes, input, label, name } = this.props;
 
 		return (
-			<div className={classes.container}>
-				<FormControl className={classes.formControl}>
-					<InputLabel htmlFor="formatted-text-mask-input">{label}</InputLabel>
-					<Input
-						name={name}
-						value={value}
-						onChange={onChange}
-						id="formatted-text-mask-input"
-						inputComponent={TextMaskCustom}
-					/>
-				</FormControl>
-			</div>
+			<FormControl className={classes.formControl}>
+				<InputLabel>{label}</InputLabel>
+				<Input name={name} value={input} inputComponent={TextMaskCustom} />
+			</FormControl>
 		);
 	}
 }
-
-FormattedInputs.propTypes = {
-	classes: PropTypes.object.isRequired,
-	onChange: PropTypes.func.isRequired,
-	value: PropTypes.object.isRequired,
-	label: PropTypes.string.isRequired,
-	name: PropTypes.string.isRequired
-};
 
 export default withStyles(styles)(FormattedInputs);

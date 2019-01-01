@@ -14,7 +14,6 @@ const styles = theme => ({
 		flexWrap: 'wrap'
 	},
 	formControl: {
-		margin: theme.spacing.unit,
 		minWidth: 200
 	},
 	selectEmpty: {
@@ -22,34 +21,38 @@ const styles = theme => ({
 	}
 });
 
-function SelectWithLabel(props) {
-	const {
-		value,
-		onChange,
-		name,
-		placeHolder,
-		options,
-		label,
-		id,
-		classes
-	} = props;
+function SelectWithLabel({
+	name,
+	options,
+	id,
+	classes,
+	input,
+	label,
+	meta: { touched, error },
+	...custom
+}) {
 	return (
-		<FormControl className={classes.formControl}>
-			<InputLabel htmlFor={id}>{placeHolder}</InputLabel>
+		<FormControl className={classes.formControl} error={touched && error}>
+			<InputLabel htmlFor={id}>{label}</InputLabel>
 			<Select
-				value={value}
-				onChange={onChange}
-				name={name}
+				native
+				{...input}
+				{...custom}
 				inputProps={{
+					name: { name },
 					id: { id }
 				}}
 			>
 				<MenuItem value="" disabled>
-					{placeHolder}
+					{label}
 				</MenuItem>
 
-				{options.map(option => {
-					return <MenuItem value={option}>{option}</MenuItem>;
+				{options.map((option, index) => {
+					return (
+						<MenuItem key={index} value={option}>
+							{option}
+						</MenuItem>
+					);
 				})}
 			</Select>
 		</FormControl>
