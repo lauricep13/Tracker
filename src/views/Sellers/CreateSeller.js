@@ -49,7 +49,6 @@ class CreateSeller extends Component {
 			success: false
 		};
 
-		this.updateSellerState = this.updateSellerState.bind(this);
 		this.handleComplete = this.handleComplete.bind(this);
 	}
 
@@ -70,7 +69,8 @@ class CreateSeller extends Component {
 					<SellerForm
 						seller={this.state.seller}
 						errors={this.state.errors}
-						onChange={this.updateSellerState}
+						onSubmit={this.handleNext}
+						submitting={this.state.saving}
 					/>
 				);
 			case 1:
@@ -85,18 +85,9 @@ class CreateSeller extends Component {
 		}
 	}
 
-	updateSellerState(e) {
-		const field = e.target.name;
-		const seller = Object.assign({}, this.state.seller);
-
-		if (e.target.type === 'checkbox') seller[field] = e.target.checked;
-		else seller[field] = e.target.value;
-
-		this.setState({ seller: seller });
-	}
-
-	handleNext = () => {
+	handleNext = values => {
 		let activeStep;
+		this.setState({ seller: Object.assign(this.state.seller, values) });
 
 		if (this.isLastStep() && !this.allStepsCompleted()) {
 			activeStep = this.getSteps().findIndex(
@@ -122,8 +113,7 @@ class CreateSeller extends Component {
 		});
 	};
 
-	handleComplete = e => {
-		e.preventDefault();
+	handleComplete = () => {
 		this.setState({ saving: true });
 		this.props.actions
 			.createSeller(this.state.seller)
@@ -190,9 +180,7 @@ class CreateSeller extends Component {
 						</div>
 					) : (
 						<div>
-							<Typography className={classes.instructions}>
-								{this.getStepContent(this.state.activeStep)}
-							</Typography>
+							{this.getStepContent(this.state.activeStep)}
 							<div>
 								<Button
 									disabled={activeStep === 0}
@@ -260,10 +248,6 @@ function mapDispatchToProps(dispatch) {
 
 CreateSeller.contextTypes = {
 	router: PropTypes.object
-};
-
-CreateSeller.propTypes = {
-	sellers: PropTypes.object.isRequired
 };
 
 export default connect(

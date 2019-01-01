@@ -15,7 +15,7 @@ export default function SwitchWithLabel(props) {
 }
 
 SwitchWithLabel.propTypes = {
-	value: PropTypes.object.isRequired,
+	value: PropTypes.bool.isRequired,
 	name: PropTypes.string.isRequired,
 	onChange: PropTypes.func.isRequired,
 	label: PropTypes.string.isRequired

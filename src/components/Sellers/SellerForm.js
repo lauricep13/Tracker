@@ -1,133 +1,127 @@
 import React from 'react';
 import { PropTypes } from 'prop-types';
-import { TextField } from '@material-ui/core';
+import { Button } from '@material-ui/core';
+import { Field, reduxForm } from 'redux-form';
 
-// Core Components
-import PhoneInput from 'components/Common/PhoneInput.js';
-import SwitchWithLabel from 'components/Common/SwitchWithLabel.js';
-import SelectWithLabel from 'components/Common/SelectWithLabel.js';
+import {
+	renderTextField,
+	renderSwitchField,
+	renderPhoneInput,
+	renderSelectField
+} from 'components/Common/InputRenderers.js';
 
-class SellerForm extends React.Component {
-	getBestTimeToCallOptions() {
-		return ['Anytime', 'Morning', 'Afternoon', 'Evening'];
-	}
-
-	getLeadStatusOptions() {
-		return [
-			'New Lead',
-			'Due Diligence',
-			'Contact Made',
-			'Following Up',
-			'Follow up Stopped',
-			'Appointment Scheduled',
-			'Waiting on seller response',
-			'Moved to offer',
-			'Under Contract',
-			'Sold',
-			'Non-responsive',
-			'Referred Out',
-			'Dead Deal'
-		];
-	}
-
-	getCommonunicationOptions() {
-		return [
-			'Following Up',
-			'Left Message',
-			'Reponse Recieved',
-			'Contact Made',
-			'Returning Caller'
-		];
-	}
-
-	render() {
-		let { seller, onChange } = this.props;
-
-		return (
-			<form>
-				<div>
-					<TextField
-						label="Seller Name"
-						value={seller.name}
-						name="name"
-						onChange={onChange}
-					/>
-
-					<SwitchWithLabel
-						onChange={onChange}
-						name="isNameVerified"
-						value={seller.isNameVerified}
-						label="Name Verified"
-					/>
-				</div>
-				<PhoneInput
-					label="Cell Number"
-					name="cellNumber"
-					value={seller.cellNumber}
-					onChange={onChange}
-				/>
-
-				<SwitchWithLabel
-					onChange={onChange}
-					name="isCellVerified"
-					value={seller.isCellVerified}
-					label="Cell Verified"
-				/>
-
-				<SwitchWithLabel
-					onChange={onChange}
-					name="isTextingOk"
-					value={seller.isTextingOk}
-					label="Texting Ok"
-				/>
-
-				<div>
-					<TextField name="email" label="Email" onChange={onChange} />
-				</div>
-
-				<div>
-					<SelectWithLabel
-						displayEmpty
-						value={seller.bestTimeToCall}
-						onChange={onChange}
-						name="bestTimeToCall"
-						placeHolder="Best time to call"
-						options={this.getBestTimeToCallOptions()}
-						id="bestTimeToCall"
-					/>
-				</div>
-
-				<div>
-					<SelectWithLabel
-						displayEmpty
-						value={seller.leadstatus}
-						onChange={onChange}
-						name="leadstatus"
-						placeHolder="Lead Status"
-						options={this.getLeadStatusOptions()}
-						id="leadstatus"
-					/>
-				</div>
-
-				<div>
-					<SelectWithLabel
-						displayEmpty
-						value={seller.communicationStatus}
-						onChange={onChange}
-						name="communicationStatus"
-						placeHolder="Communication Status"
-						options={this.getCommonunicationOptions()}
-						id="communicationStatus"
-					/>
-				</div>
-			</form>
-		);
-	}
+function getBestTimeToCallOptions() {
+	return ['Anytime', 'Morning', 'Afternoon', 'Evening'];
 }
 
+function getLeadStatusOptions() {
+	return [
+		'New Lead',
+		'Due Diligence',
+		'Contact Made',
+		'Following Up',
+		'Follow up Stopped',
+		'Appointment Scheduled',
+		'Waiting on seller response',
+		'Moved to offer',
+		'Under Contract',
+		'Sold',
+		'Non-responsive',
+		'Referred Out',
+		'Dead Deal'
+	];
+}
+
+function getCommonunicationOptions() {
+	return [
+		'Following Up',
+		'Left Message',
+		'Reponse Recieved',
+		'Contact Made',
+		'Returning Caller'
+	];
+}
+
+const SellerForm = props => {
+	let { seller, handleSubmit, pristine, submitting } = props;
+
+	return (
+		<form onSubmit={handleSubmit}>
+			<div>
+				<Field name="name" component={renderTextField} label="Seller Name" />
+
+				<Field
+					name="isNameVerified"
+					label="Name Verified"
+					component={renderSwitchField}
+				/>
+			</div>
+			<div>
+				<Field
+					label="Cell Number"
+					name="cellNumber"
+					component={renderPhoneInput}
+				/>
+
+				<Field
+					name="isCellVerified"
+					label="Cell Verified"
+					component={renderSwitchField}
+				/>
+
+				<Field
+					name="isTextingOk"
+					label="Texting Ok"
+					component={renderSwitchField}
+				/>
+			</div>
+			<div>
+				<Field name="email" label="Email" component={renderTextField} />
+			</div>
+
+			<div>
+				<Field
+					name="bestTimeToCall"
+					label="Best time to call"
+					component={renderSelectField}
+					options={getBestTimeToCallOptions()}
+				/>
+			</div>
+
+			<div>
+				<Field
+					name="leadStatus"
+					label="Lead Status"
+					component={renderSelectField}
+					options={getLeadStatusOptions()}
+				/>
+			</div>
+
+			<div>
+				<Field
+					name="communicationStatus"
+					label="Communication Status"
+					component={renderSelectField}
+					options={getCommonunicationOptions()}
+				/>
+			</div>
+
+			<Button type="submit" disabled={pristine || submitting}>
+				Submit
+			</Button>
+		</form>
+	);
+};
+
 SellerForm.propTypes = {
-	onChange: PropTypes.func.isRequired,
 	seller: PropTypes.object.isRequired
 };
 
-export default SellerForm;
+// create new, "configured" function
+const createReduxForm = reduxForm({
+	form: 'SellerForm',
+	destroyOnUnmount: false
+});
+
+// evaluate it for ContactForm component
+export default createReduxForm(SellerForm);
