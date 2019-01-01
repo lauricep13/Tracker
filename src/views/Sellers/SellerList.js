@@ -4,7 +4,7 @@ import { bindActionCreators } from 'redux';
 import * as sellerActions from 'actions/sellerActions.js';
 
 // Core components
-import SellersTable from 'components/Sellers/SellersTable/SellersTable.js';
+import SellersTable from 'components/Sellers/SellersTable.js';
 
 const SellersList = props => {
 	return (

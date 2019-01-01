@@ -47,6 +47,25 @@ class SellersTable extends React.Component {
 		this.state = {
 			toEdit: false
 		};
+
+		this.onRowClick = this.onRowClick.bind(this);
+	}
+
+	onRowClick(state, rowInfo, column, instance) {
+		return {
+			onClick: (e, handleOriginal) => {
+				const sellerData = rowInfo.original;
+				if (handleOriginal) {
+					handleOriginal();
+				}
+
+				// Sets the state to navigate to the edit page
+				this.setState(() => ({
+					toEdit: true,
+					sellerId: sellerData.id
+				}));
+			}
+		};
 	}
 
 	render() {
@@ -62,22 +81,7 @@ class SellersTable extends React.Component {
 				defaultPageSize={20}
 				className="-striped -highlight"
 				filterable={true}
-				getTdProps={(state, rowInfo, column, instance) => {
-					return {
-						onClick: (e, handleOriginal) => {
-							const sellerData = rowInfo.original;
-							if (handleOriginal) {
-								handleOriginal();
-							}
-
-							// Sets the state to navigate to the edit page
-							this.setState(() => ({
-								toEdit: true,
-								sellerId: sellerData.id
-							}));
-						}
-					};
-				}}
+				getTdProps={this.onRowClick}
 			/>
 		);
 	}

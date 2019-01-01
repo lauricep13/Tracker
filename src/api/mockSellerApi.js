@@ -1,4 +1,5 @@
 import delay from 'api/delay';
+import _ from 'underscore';
 
 // This file mocks a web API by working with the hard-coded data below.
 // It uses setTimeout to simulate the delay of an AJAX call.
@@ -50,7 +51,7 @@ const sellers = [
 
 //This would be performed on the server in a real app. Just stubbing in.
 const generateId = seller => {
-	return seller.firstName.toLowerCase() + '-' + seller.lastName.toLowerCase();
+	return seller.name.toLowerCase();
 };
 
 class SellerApi {
@@ -62,22 +63,29 @@ class SellerApi {
 		});
 	}
 
+	static getById(Id) {
+		return new Promise((resolve, reject) => {
+			setTimeout(() => {
+				const seller = _.find(sellers, seller => {
+					return seller.id == Id;
+				});
+				if (!_.isUndefined(seller)) {
+					resolve(Object.assign({}, seller));
+				} else {
+					resolve(null);
+				}
+			}, delay);
+		});
+	}
+
 	static saveSeller(seller) {
 		seller = Object.assign({}, seller); // to avoid manipulating object passed in.
 		return new Promise((resolve, reject) => {
 			setTimeout(() => {
 				// Simulate server-side validation
 				const minSellerNameLength = 3;
-				if (seller.firstName.length < minSellerNameLength) {
-					reject(
-						`First Name must be at least ${minSellerNameLength} characters.`
-					);
-				}
-
-				if (seller.lastName.length < minSellerNameLength) {
-					reject(
-						`Last Name must be at least ${minSellerNameLength} characters.`
-					);
+				if (seller.name.length < minSellerNameLength) {
+					reject(`Name must be at least ${minSellerNameLength} characters.`);
 				}
 
 				if (seller.id) {

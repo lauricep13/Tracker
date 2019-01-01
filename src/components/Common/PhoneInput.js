@@ -52,29 +52,20 @@ TextMaskCustom.propTypes = {
 };
 
 class FormattedInputs extends React.Component {
-	state = {
-		textmask: '(   )    -    ',
-		numberformat: '1320'
-	};
-
-	handleChange = name => event => {
-		this.setState({
-			[name]: event.target.value
-		});
-	};
+	constructor(props) {
+		super(props);
+	}
 
 	render() {
-		const { classes, onChange } = this.props;
-		const { textmask } = this.state;
-		debugger;
+		const { classes, onChange, value, label, name } = this.props;
+
 		return (
 			<div className={classes.container}>
 				<FormControl className={classes.formControl}>
-					<InputLabel htmlFor="formatted-text-mask-input">
-						react-text-mask
-					</InputLabel>
+					<InputLabel htmlFor="formatted-text-mask-input">{label}</InputLabel>
 					<Input
-						value={textmask}
+						name={name}
+						value={value}
 						onChange={onChange}
 						id="formatted-text-mask-input"
 						inputComponent={TextMaskCustom}
@@ -86,7 +77,11 @@ class FormattedInputs extends React.Component {
 }
 
 FormattedInputs.propTypes = {
-	classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
+	onChange: PropTypes.func.isRequired,
+	value: PropTypes.object.isRequired,
+	label: PropTypes.string.isRequired,
+	name: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FormattedInputs);

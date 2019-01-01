@@ -3,7 +3,8 @@ import Sellers from 'layout/Sellers/Sellers.js';
 
 const indexRoutes = [
 	{ path: '/Dashboard', component: Dashboard },
-	{ path: '/Sellers', component: Sellers }
+	{ path: '/Sellers', component: Sellers },
+	{ path: '/', component: Sellers }
 ];
 
 export default indexRoutes;

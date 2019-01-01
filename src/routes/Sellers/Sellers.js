@@ -1,9 +1,9 @@
 import Dashboard from '@material-ui/icons/Dashboard';
 
 // Core component views
-import SellerList from 'views/Sellers/SellerList/SellerList.js';
-import CreateSeller from 'views/Sellers/CreateSeller/CreateSeller.js';
-import EditSeller from 'views/Sellers/EditSeller/EditSeller.js';
+import SellerList from 'views/Sellers/SellerList.js';
+import CreateSeller from 'views/Sellers/CreateSeller.js';
+import EditSeller from 'views/Sellers/EditSeller.js';
 
 const sellerRoutes = [
 	{
