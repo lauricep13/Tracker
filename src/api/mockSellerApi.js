@@ -16,22 +16,22 @@ const sellers = [
 		alternatePhoneNumber: '',
 		bestTimeToCall: '',
 		otherContacts: [],
-		leadstatus: '',
-		communicationStatus: ''
+		leadStatus: 'New Lead',
+		communicationStatus: 'Following Up'
 	},
 	{
 		id: 2,
 		name: 'person 2',
-		isNameVerified: false,
+		isNameVerified: true,
 		email: 'person2@person.com',
 		cellNumber: '(123) 456-7890',
-		isCellVerified: false,
+		isCellVerified: true,
 		isTextingOk: false,
 		alternatePhoneNumber: '',
 		bestTimeToCall: '',
 		otherContacts: [],
-		leadstatus: '',
-		communicationStatus: ''
+		leadStatus: 'New Lead',
+		communicationStatus: 'Following Up'
 	},
 	{
 		id: 3,
@@ -44,8 +44,8 @@ const sellers = [
 		alternatePhoneNumber: '',
 		bestTimeToCall: '',
 		otherContacts: [],
-		leadstatus: '',
-		communicationStatus: ''
+		leadStatus: 'New Lead',
+		communicationStatus: 'Following Up'
 	}
 ];
 

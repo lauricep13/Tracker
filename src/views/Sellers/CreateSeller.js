@@ -17,8 +17,7 @@ import {
 
 // Core components
 import SellerForm from 'components/Sellers/SellerForm.js';
-import SaveButton from 'components/Common/SaveButton.js';
-import CustomizedSnackbar from 'components/Common/CustomizedSnackbar.js';
+import NewPropertyForm from 'components/Properties/NewPropertyForm.js';
 
 const styles = theme => ({
 	root: {
@@ -41,7 +40,7 @@ class CreateSeller extends Component {
 		super(props, context);
 
 		this.state = {
-			seller: Object.assign({}, this.props.seller),
+			seller: newSeller(),
 			activeStep: 0,
 			completed: {},
 			errors: {},
@@ -51,13 +50,6 @@ class CreateSeller extends Component {
 
 		this.handleComplete = this.handleComplete.bind(this);
 	}
-
-	componentWillreceiveProps(nextProps) {
-		if (this.props.seller.id !== nextProps.seller.id) {
-			this.setState({ seller: Object.assign({}, nextProps.seller) });
-		}
-	}
-
 	getSteps() {
 		return ['Seller Info', 'Property Info', 'Some other info'];
 	}
@@ -67,19 +59,32 @@ class CreateSeller extends Component {
 			case 0:
 				return (
 					<SellerForm
-						seller={this.state.seller}
 						errors={this.state.errors}
 						onSubmit={this.handleNext}
 						submitting={this.state.saving}
 					/>
 				);
 			case 1:
-				return 'An ad group contains one or more ads which target a shared set of keywords.';
+				return (
+					<NewPropertyForm
+						errors={this.state.errors}
+						onSubmit={this.handleNext}
+						submitting={this.state.saving}
+					/>
+				);
 			case 2:
-				return `Try out different ad text to see what brings in the most customers,
-              and learn how to enhance your ads using features like ad extensions.
-              If you run into any problems with your ads, find out how to tell if
-              they're running and how to resolve approval issues.`;
+				return (
+					<form onSubmit={this.handleComplete}>
+						<Button
+							variant="contained"
+							color="primary"
+							type="submit"
+							disabled={this.state.saving}
+						>
+							Submit
+						</Button>
+					</form>
+				);
 			default:
 				return 'Unknown step';
 		}
@@ -87,7 +92,8 @@ class CreateSeller extends Component {
 
 	handleNext = values => {
 		let activeStep;
-		this.setState({ seller: Object.assign(this.state.seller, values) });
+		if (this.state.activeStep === 0)
+			this.setState({ seller: Object.assign(this.state.seller, values) });
 
 		if (this.isLastStep() && !this.allStepsCompleted()) {
 			activeStep = this.getSteps().findIndex(
@@ -101,24 +107,19 @@ class CreateSeller extends Component {
 		});
 	};
 
-	handleBack = () => {
-		this.setState(state => ({
-			activeStep: state.activeStep - 1
-		}));
-	};
-
 	handleStep = step => () => {
 		this.setState({
 			activeStep: step
 		});
 	};
 
-	handleComplete = () => {
+	handleComplete = e => {
+		e.preventDefault();
 		this.setState({ saving: true });
 		this.props.actions
 			.createSeller(this.state.seller)
 			.then(() => this.redirectToSellerList())
-			.catch(() => this.setState({ saving: false, success: false }));
+			.catch(e => this.setState({ saving: false, success: false }));
 	};
 
 	redirectToSellerList() {
@@ -126,13 +127,6 @@ class CreateSeller extends Component {
 
 		this.context.router.history.push('/Sellers');
 	}
-
-	handleReset = () => {
-		this.setState({
-			activeStep: 0,
-			completed: {}
-		});
-	};
 
 	completedSteps() {
 		return Object.keys(this.state.completed).length;
@@ -150,7 +144,6 @@ class CreateSeller extends Component {
 		return this.completedSteps() === this.getSteps().length;
 	}
 	render() {
-		const { classes } = this.props;
 		const { activeStep } = this.state;
 
 		return (
@@ -171,48 +164,7 @@ class CreateSeller extends Component {
 						);
 					})}
 				</Stepper>
-				<div>
-					{this.allStepsCompleted() ? (
-						<div>
-							<Typography className={classes.instructions}>
-								{'All steps completed'}
-							</Typography>
-						</div>
-					) : (
-						<div>
-							{this.getStepContent(this.state.activeStep)}
-							<div>
-								<Button
-									disabled={activeStep === 0}
-									onClick={this.handleBack}
-									className={classes.button}
-								>
-									Back
-								</Button>
-								{!this.isLastStep() ? (
-									<Button
-										variant="contained"
-										color="primary"
-										onClick={this.handleNext}
-										className={classes.button}
-									>
-										Next
-									</Button>
-								) : (
-									<SaveButton
-										variant="contained"
-										color="primary"
-										onSave={this.handleComplete}
-										success={this.state.success}
-										saving={this.state.saving}
-									>
-										Save
-									</SaveButton>
-								)}
-							</div>
-						</div>
-					)}
-				</div>
+				<div>{this.getStepContent(this.state.activeStep)}</div>
 			</div>
 		);
 	}
@@ -234,11 +186,14 @@ function newSeller() {
 	};
 }
 
-function mapStateToProps(state, ownProps) {
-	return {
-		seller: newSeller()
-	};
-}
+const mapStateToProps = state => {
+	if (state.seller)
+		return {
+			seller: state.sellers.payload,
+			loading: state.sellers.loading,
+			error: state.sellers.error
+		};
+};
 
 function mapDispatchToProps(dispatch) {
 	return {

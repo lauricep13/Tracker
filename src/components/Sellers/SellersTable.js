@@ -1,9 +1,12 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { PropTypes } from 'prop-types';
 
 // Import React Table
 import ReactTable from 'react-table';
 import 'react-table/react-table.css';
+
+import { Button } from '@material-ui/core';
 
 const columns = [
 	{
@@ -17,15 +20,30 @@ const columns = [
 	},
 	{
 		Header: 'Name Verified',
-		accessor: 'isNameVerified'
+		accessor: 'isNameVerified',
+		Cell: row => (
+			<span>
+				<span
+					style={{
+						color: row.value === true ? '#57d500' : '#ffbf00'
+					}}
+				>
+					&#x25cf;
+				</span>{' '}
+				{row.value === true ? 'Verified' : 'Not Verified'}
+			</span>
+		)
 	},
 	{
 		Header: 'Cell Number',
 		accessor: 'cellNumber'
 	},
 	{
-		Header: 'Click2Call using Callrail',
-		accessor: 'id'
+		Header: 'Click 2 Call',
+		accessor: 'cellNumber',
+		Cell: row => (
+			<Button color="primary" variant="contained" children={'Call'} />
+		)
 	},
 	{
 		Header: 'Lead Status',
@@ -33,21 +51,13 @@ const columns = [
 	},
 	{
 		Header: 'Communication Status',
-		accessor: 'communicationstatus'
-	},
-	{
-		Header: 'Property Link',
-		accessor: 'id'
+		accessor: 'communicationStatus'
 	}
 ];
 
 class SellersTable extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			toEdit: false
-		};
-
+	constructor(props, context) {
+		super(props, context);
 		this.onRowClick = this.onRowClick.bind(this);
 	}
 
@@ -58,21 +68,14 @@ class SellersTable extends React.Component {
 				if (handleOriginal) {
 					handleOriginal();
 				}
-
+				debugger;
 				// Sets the state to navigate to the edit page
-				this.setState(() => ({
-					toEdit: true,
-					sellerId: sellerData.id
-				}));
+				this.context.router.history.push('/Sellers/Edit/' + sellerData.id);
 			}
 		};
 	}
 
 	render() {
-		if (this.state.toEdit) {
-			return <Redirect to={'/Sellers/Edit/' + this.state.sellerId} />;
-		}
-
 		const { sellers } = this.props;
 		return (
 			<ReactTable
@@ -86,5 +89,9 @@ class SellersTable extends React.Component {
 		);
 	}
 }
+
+SellersTable.contextTypes = {
+	router: PropTypes.object
+};
 
 export default SellersTable;

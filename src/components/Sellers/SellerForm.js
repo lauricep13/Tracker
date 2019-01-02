@@ -10,41 +10,12 @@ import {
 	renderSelectField
 } from 'components/Common/InputRenderers.js';
 
-function getBestTimeToCallOptions() {
-	return ['Anytime', 'Morning', 'Afternoon', 'Evening'];
-}
+// options
+import BestTimeToCallTypes from 'data/Sellers/BestTimeToCallTypes.js';
+import LeadStatusTypes from 'data/Sellers/LeadStatusTypes.js';
+import CommunicationStatusTypes from 'data/Sellers/CommunicationStatusTypes.js';
 
-function getLeadStatusOptions() {
-	return [
-		'New Lead',
-		'Due Diligence',
-		'Contact Made',
-		'Following Up',
-		'Follow up Stopped',
-		'Appointment Scheduled',
-		'Waiting on seller response',
-		'Moved to offer',
-		'Under Contract',
-		'Sold',
-		'Non-responsive',
-		'Referred Out',
-		'Dead Deal'
-	];
-}
-
-function getCommonunicationOptions() {
-	return [
-		'Following Up',
-		'Left Message',
-		'Reponse Recieved',
-		'Contact Made',
-		'Returning Caller'
-	];
-}
-
-const SellerForm = props => {
-	let { seller, handleSubmit, pristine, submitting } = props;
-
+const SellerForm = ({ handleSubmit, pristine, submitting }) => {
 	return (
 		<form onSubmit={handleSubmit}>
 			<div>
@@ -84,7 +55,7 @@ const SellerForm = props => {
 					name="bestTimeToCall"
 					label="Best time to call"
 					component={renderSelectField}
-					options={getBestTimeToCallOptions()}
+					options={BestTimeToCallTypes}
 				/>
 			</div>
 
@@ -93,7 +64,7 @@ const SellerForm = props => {
 					name="leadStatus"
 					label="Lead Status"
 					component={renderSelectField}
-					options={getLeadStatusOptions()}
+					options={LeadStatusTypes}
 				/>
 			</div>
 
@@ -102,12 +73,17 @@ const SellerForm = props => {
 					name="communicationStatus"
 					label="Communication Status"
 					component={renderSelectField}
-					options={getCommonunicationOptions()}
+					options={CommunicationStatusTypes}
 				/>
 			</div>
 
-			<Button type="submit" disabled={pristine || submitting}>
-				Submit
+			<Button
+				variant="contained"
+				color="primary"
+				type="submit"
+				disabled={pristine || submitting}
+			>
+				Next
 			</Button>
 		</form>
 	);

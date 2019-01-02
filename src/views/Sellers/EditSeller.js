@@ -6,22 +6,24 @@ import _ from 'underscore';
 import { Typography } from '@material-ui/core';
 
 class EditSeller extends React.Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			id: this.props.match.params.id
-		};
+	componentDidMount() {
+		if (this.props.id) this.props.actions.getSellerById(this.props.id);
 	}
 
 	render() {
-		if (_.isUndefined(this.props.seller))
-			return <Typography variant="display1" children="Seller does not exist" />;
+		if (this.props.error) {
+			return <div>Error! {this.props.message}</div>;
+		}
+
+		if (this.props.loading) {
+			return <div>Loading...</div>;
+		}
 
 		return (
 			<div>
 				<h2>Edit Seller</h2>
 				<h6>{this.props.seller ? this.props.seller.name : 'undefined'}</h6>
-				<h6>{this.state.id}</h6>
+				<h6>{this.props.id}</h6>
 			</div>
 		);
 	}
@@ -29,10 +31,12 @@ class EditSeller extends React.Component {
 
 function mapStateToProps(state, ownProps) {
 	const { id } = ownProps.match.params;
-	const seller = _.find(state.sellers, seller => seller.id == id);
 
 	return {
-		seller: seller
+		id: id,
+		seller: state.sellers.payload,
+		loading: state.sellers.loading,
+		error: state.sellers.error
 	};
 }
 

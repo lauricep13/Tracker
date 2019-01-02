@@ -5,16 +5,11 @@ import { createBrowserHistory } from 'history';
 import configureStore from 'store/configureStore.js';
 import { Provider } from 'react-redux';
 
-// core components
-import { loadSellers } from 'actions/sellerActions.js';
-
 import indexRoutes from 'routes/index.jsx';
 
 const hist = createBrowserHistory();
 const initialState = {};
 const store = configureStore(initialState);
-
-store.dispatch(loadSellers());
 
 ReactDOM.render(
 	<Provider store={store}>

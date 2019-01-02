@@ -8,10 +8,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
-import { Switch, MenuItem } from '@material-ui/core';
+import { Switch, MenuItem, Input } from '@material-ui/core';
 
-import PhoneInput from 'components/Common/PhoneInput.js';
-import SelectWithLabel from 'components/Common/SelectWithLabel.js';
+import { PhoneMask } from 'components/Common/InputMasks.js';
 
 export const renderTextField = ({
 	label,
@@ -65,11 +64,11 @@ export const renderPhoneInput = ({
 	label,
 	name,
 	meta: { touched, error },
-	children,
 	...custom
 }) => (
 	<FormControl error={touched && error}>
-		<PhoneInput label={label} name={name} value={input} />
+		<InputLabel>{label}</InputLabel>
+		<Input name={name} inputComponent={PhoneMask} {...input} {...custom} />
 		{renderFromHelper({ touched, error })}
 	</FormControl>
 );

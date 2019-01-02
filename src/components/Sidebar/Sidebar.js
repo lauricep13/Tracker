@@ -6,22 +6,17 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import { Drawer } from '@material-ui/core';
-// core components
-const drawerWidth = 240;
 
-const styles = theme => ({
-	drawer: {
-		width: drawerWidth,
-		flexShrink: 0
-	},
-	drawerPaper: {
-		width: drawerWidth
-	},
-	toolbar: theme.mixins.toolbar
-});
+import classNames from 'classnames';
+import sideBarStyles from './Sidebar.jsx';
+import { PropTypes } from 'prop-types';
 
-const Sidebar = ({ ...props }) => {
+const Sidebar = (props, context) => {
 	const { classes, routes } = props;
+	const color = 'blue';
+	function activeRoute(routeName) {
+		return context.router.route.location.pathname === routeName;
+	}
 
 	return (
 		<Drawer
@@ -32,21 +27,46 @@ const Sidebar = ({ ...props }) => {
 			}}
 		>
 			<div className={classes.toolbar} />
-			<List>
+			<List className={classes.list}>
 				{routes.map((route, index) => {
 					if (!route.sidebarName) return null;
 
+					var listItemClasses = classNames({
+						[' ' + classes[color]]: activeRoute(route.path)
+					});
+
+					const whiteFontClasses = classNames({
+						[' ' + classes.whiteFont]: activeRoute(route.path)
+					});
+
+					debugger;
+
 					return (
-						<NavLink to={route.path} key={index}>
-							<ListItem>
-								<ListItemText primary={route.sidebarName} />
+						<NavLink
+							className={classes.item}
+							activeClassName="active"
+							to={route.path}
+							key={index}
+						>
+							<ListItem button className={classes.itemLink + listItemClasses}>
+								<ListItemText
+									primary={route.sidebarName}
+									className={classes.itemText + whiteFontClasses}
+									disableTypography={true}
+								/>
 							</ListItem>
 						</NavLink>
 					);
 				})}
 			</List>
+
+			<div className={classes.background} />
 		</Drawer>
 	);
 };
 
-export default withStyles(styles)(Sidebar);
+Sidebar.contextTypes = {
+	router: PropTypes.object
+};
+
+export default withStyles(sideBarStyles)(Sidebar);
